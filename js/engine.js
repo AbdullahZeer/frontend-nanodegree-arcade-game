@@ -9,7 +9,7 @@
  * drawn but that is not the case. What's really happening is the entire "scene"
  * is being drawn over and over, presenting the illusion of animation.
  *
- * This engine makes the canvas' context (ctx) object globally available to make 
+ * This engine makes the canvas' context (ctx) object globally available to make
  * writing app.js a little simpler to work with.
  */
 
@@ -62,7 +62,10 @@ var Engine = (function(global) {
      * particularly setting the lastTime variable that is required for the
      * game loop.
      */
+     var music = new Audio('sound/dawn-flyer.mp3');
+     music.loop = true;
     function init() {
+      music.play();
         reset();
         lastTime = Date.now();
         main();
@@ -79,9 +82,15 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
-    }
+        checkCollisions();
+    };
 
+    function checkCollisions() {
+      allEnemies.forEach(function(enemy){
+        if(enemy.enemyCollisions())
+        player.die();
+      });
+    }
     /* This is called by the update function and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
      * their update() methods. It will then call the update function for your
@@ -93,7 +102,8 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        player.update();
+        player.update(gem);
+        gem.update();
     }
 
     /* This function initially draws the "game level", it will then call
@@ -146,11 +156,21 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        allEnemies.forEach(function(enemy) {
-            enemy.render();
-        });
+         ctx.font = "18px Arial"
+         ctx.fillText("Score:" + player.score,4 * 101, 80);
 
-        player.render();
+
+             allEnemies.forEach(function(enemy) {
+                 enemy.render();
+             });
+
+             player.render();
+             gem.render()
+
+
+
+
+
     }
 
     /* This function does nothing but it could have been a good place to
@@ -170,7 +190,11 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/Gem-Green.png',
+        'images/Gem-Blue.png',
+        'images/Gem-Orange.png',
+        'images/knight.png'
     ]);
     Resources.onReady(init);
 
