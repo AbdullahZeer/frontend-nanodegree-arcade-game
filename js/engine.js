@@ -63,6 +63,7 @@ var Engine = (function(global) {
      * game loop.
      */
      var music = new Audio('sound/dawn-flyer.mp3');
+     music.volume = 0.2;
      music.loop = true;
     function init() {
       music.play();
@@ -156,20 +157,38 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-         ctx.font = "18px Arial"
-         ctx.fillText("Score:" + player.score,4 * 101, 80);
+
+         if(!player.ready){
+           meunRender();
+            ctx.font = "24px Arial"
+           ctx.fillText("press space to play",2 * 80, 4 * 80);
+           if(player.numPlayed > 0){
+              ctx.fillText("your score :" + player.score,2 * 82, 4 * 90);
+              player.allScores.sort(function(a,b) {
+                if(a < b)
+                return 1;
+
+                if(a > b)
+                return -1;
+
+                return 0;
+              });
+              ctx.fillText("your highest score :" + player.allScores[0],2 * 82, 4 * 100);
+           }
+         }else {
 
 
-             allEnemies.forEach(function(enemy) {
-                 enemy.render();
-             });
-
-             player.render();
-             gem.render()
+           ctx.font = "18px Arial"
+           ctx.fillText("Score:" + player.score,4 * 101, 80);
 
 
+               allEnemies.forEach(function(enemy) {
+                   enemy.render();
+               });
 
-
+               player.render();
+               gem.render()
+         }
 
     }
 
@@ -194,7 +213,8 @@ var Engine = (function(global) {
         'images/Gem-Green.png',
         'images/Gem-Blue.png',
         'images/Gem-Orange.png',
-        'images/knight.png'
+        'images/knight.png',
+        'images/menu.png'
     ]);
     Resources.onReady(init);
 

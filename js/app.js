@@ -48,7 +48,10 @@ var player = function(x,y) {
   this.sprite = 'images/knight.png';
   this.x = x;
   this.y = y;
+  this.ready = false;
+  this.numPlayed = 0;
   this.score = 0 ;
+  this.allScores = [];
 
 };
 
@@ -64,27 +67,56 @@ player.prototype.update = function(gem) {
 
 }
 player.prototype.die = function() {
+  this.ready = false;
+  this.allScores.push(this.score);
   this.x = 2;
   this.y = 5;
 };
+
+player.prototype.attack = function() {
+
+
+}
+
+player.prototype.enemyInfront = function(enemy) {
+
+  if( Math.floor(enemy.x) === this.x && enemy.y === this.y - 1)
+  return true;
+}
 
 player.prototype.render = function(){
   ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 75);
 };
 
+var crossSound = new Audio('sound/cross.wav');
 player.prototype.handleInput = function(key){
 
-  if(key === 'left' && player.x != 0 )
-  player.x--;
+  if(!this.ready && key === 'space'){
+    this.ready = true;
+    this.score = 0;
+    this.numPlayed++;
+  }
 
-  if(key === 'right' && player.x != 4)
-  player.x++;
+  if(key === 'left' && this.x != 0 )
+  this.x--;
 
-  if(key === 'up' && player.y != 0 )
-  player.y--;
+  if(key === 'right' && this.x != 4)
+  this.x++;
 
-  if(key === 'down' && player.y != 5)
-  player.y++;
+  if(key === 'up'){
+    this.y--;
+    if(this.y === 0){
+        this.y = 5;
+        this.score += 10;
+        crossSound.play();
+    }
+
+  }
+
+
+  if(key === 'down' && this.y != 5)
+  this.y++;
+
 
 }
 
@@ -156,7 +188,9 @@ for (var i = 0; i < 4; i++) {
 var player = new player(2,5);
 var gem = makeGems();
 
-
+var meunRender = function() {
+  ctx.drawImage(Resources.get('images/menu.png'), 0, 0);
+}
 
 
 // This listens for key presses and sends the keys to your
@@ -166,7 +200,8 @@ document.addEventListener('keyup', function(e) {
         37: 'left',
         38: 'up',
         39: 'right',
-        40: 'down'
+        40: 'down',
+        32:'space'
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
