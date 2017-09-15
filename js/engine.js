@@ -160,7 +160,7 @@ var Engine = (function(global) {
 
          if(!player.ready){
            meunRender();
-            ctx.font = "24px Arial"
+            ctx.font = "24px Arial";
            ctx.fillText("press space to play",2 * 80, 4 * 80);
            if(player.numPlayed > 0){
               ctx.fillText("your score :" + player.score,2 * 82, 4 * 90);
@@ -178,7 +178,7 @@ var Engine = (function(global) {
          }else {
 
 
-           ctx.font = "18px Arial"
+           ctx.font = "18px Arial";
            ctx.fillText("Score:" + player.score,4 * 101, 80);
 
 
@@ -187,7 +187,7 @@ var Engine = (function(global) {
                });
 
                player.render();
-               gem.render()
+               gem.render();
          }
 
     }

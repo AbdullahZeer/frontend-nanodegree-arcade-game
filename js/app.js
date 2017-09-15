@@ -5,7 +5,7 @@ var Enemy = function(speed,x,y) {
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png'
+    this.sprite = 'images/enemy-bug.png';
     this.speed = speed;
     this.x = x;
     this.y = y;
@@ -31,9 +31,9 @@ Enemy.prototype.update = function(dt) {
 };
 
 Enemy.prototype.enemyCollisions = function(){
-  if( Math.floor(this.x) === player.x && this.y === player.y)
+  if( Math.ceil(this.x - 0.5) === player.x && this.y === player.y)
   return true;
-}
+};
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function(index) {
@@ -65,24 +65,14 @@ player.prototype.update = function(gem) {
     this.y === 5;
   }
 
-}
+};
+
 player.prototype.die = function() {
   this.ready = false;
   this.allScores.push(this.score);
   this.x = 2;
   this.y = 5;
 };
-
-player.prototype.attack = function() {
-
-
-}
-
-player.prototype.enemyInfront = function(enemy) {
-
-  if( Math.floor(enemy.x) === this.x && enemy.y === this.y - 1)
-  return true;
-}
 
 player.prototype.render = function(){
   ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 75);
@@ -110,15 +100,10 @@ player.prototype.handleInput = function(key){
         this.score += 10;
         crossSound.play();
     }
-
   }
-
-
   if(key === 'down' && this.y != 5)
   this.y++;
-
-
-}
+};
 
 var Gem = function(x,y,sprite,points) {
 
@@ -132,13 +117,13 @@ var Gem = function(x,y,sprite,points) {
 Gem.prototype.gemCollisions = function(){
   if( Math.floor(this.x) === player.x && this.y === player.y)
   return true;
-}
+};
 
 var makeGems = function() {
 
-  var sprites = ['images/Gem-Green.png' , 'images/Gem-Blue.png' ,'images/Gem-Orange.png']
+  var sprites = ['images/Gem-Green.png' , 'images/Gem-Blue.png' ,'images/Gem-Orange.png'];
   var points = ['5' , '10' , '20'];
-  var x = [0,1,2,3,4]
+  var x = [0,1,2,3,4];
   var y = [1,2,3];
   var gemIndex = getRandomInt(0,2);
 
@@ -158,7 +143,7 @@ Gem.prototype.update = function(dt) {
     this.x = newGem.x;
     this.y = newGem.y;
   }
-}
+};
 
 Gem.prototype.render = function(){
   ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 100, 101/2 , 171/2);
@@ -178,7 +163,7 @@ var makeEnemie = function(){
   var y = [1,2,3];
   var enemy = new Enemy(speeds[getRandomInt(0,3)],x,y[getRandomInt(0,2)]);
   return enemy ;
-}
+};
 
 var allEnemies = [];
 for (var i = 0; i < 4; i++) {
@@ -190,7 +175,7 @@ var gem = makeGems();
 
 var meunRender = function() {
   ctx.drawImage(Resources.get('images/menu.png'), 0, 0);
-}
+};
 
 
 // This listens for key presses and sends the keys to your
