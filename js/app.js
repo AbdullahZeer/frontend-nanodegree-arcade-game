@@ -32,8 +32,10 @@ Enemy.prototype.update = function(dt) {
 
 Enemy.prototype.enemyCollisions = function(){
   if( Math.ceil(this.x - 0.5) === player.x && this.y === player.y)
-  return true;
+  player.die();
 };
+
+
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function(index) {
@@ -50,6 +52,7 @@ var player = function(x,y) {
   this.y = y;
   this.ready = false;
   this.numPlayed = 0;
+  this.numCross = 0;
   this.score = 0 ;
   this.allScores = [];
 
@@ -67,12 +70,90 @@ player.prototype.update = function(gem) {
 
 };
 
+var hitSound = new Audio('sound/hit.wav');
+
 player.prototype.die = function() {
+  hitSound.play();
   this.ready = false;
+  this.numCross = 0;
   this.allScores.push(this.score);
   this.x = 2;
   this.y = 5;
 };
+
+var abilitySound = new Audio('sound/ability.wav');
+player.prototype.ability = function() {
+
+  if (this.numCross >= 5) {
+    allEnemies = [];
+
+    abilitySound.play();
+    allFire = makeFire(this.x,this.y);
+    setTimeout(function(){ for (var i = 0; i < 4; i++) {
+      allEnemies.push(makeEnemie());
+    }},1000);
+
+    setTimeout(function() {
+      allFire = [];
+    },600)
+    this.numCross = 0;
+
+  }
+
+}
+
+var Fire = function (x,y,d) {
+
+  this.sprite = 'images/fire.png';
+  this.x = x;
+  this.y = y;
+  this.d = d;
+
+}
+
+var makeFire = function (x,y) {
+    fire = []
+
+  for (var i = 0; i < y; i++) {
+    fire.push(new Fire(x,i,'left'));
+    fire.push(new Fire(x,i,'right'));
+  }
+
+  for (var i = y; i  > -1; i--) {
+    fire.push(new Fire(x,i,'left'));
+    fire.push(new Fire(x,i,'right'));
+  }
+
+  return fire;
+}
+
+var allFire = [];
+
+Fire.prototype.update = function(dt ,d) {
+
+  if (d === 'right' && this.x != null && this.y != null) {
+    this.x = this.x + (10 * dt);
+
+    if(this.x * 101 > 6 * 101){
+      this.x =  null;
+      this.y = null;
+    }
+  }
+
+  if (d === 'left' && this.x != null && this.y != null) {
+    this.x = this.x - (10 * dt);
+
+    if(this.x * 101 < -3){
+      this.x =  null;
+      this.y = null;
+    }
+  }
+
+}
+
+Fire.prototype.render = function() {
+  ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 75);
+}
 
 player.prototype.render = function(){
   ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 75);
@@ -87,21 +168,25 @@ player.prototype.handleInput = function(key){
     this.numPlayed++;
   }
 
-  if(key === 'left' && this.x != 0 )
+  if (this.ready && key === 'space') {
+    player.ability()
+  }
+  if(key === 'left' && this.x != 0 && this.ready)
   this.x--;
 
-  if(key === 'right' && this.x != 4)
+  if(key === 'right' && this.x != 4 && this.ready)
   this.x++;
 
-  if(key === 'up'){
+  if(key === 'up' && this.ready){
     this.y--;
     if(this.y === 0){
         this.y = 5;
         this.score += 10;
+        this.numCross++;
         crossSound.play();
     }
   }
-  if(key === 'down' && this.y != 5)
+  if(key === 'down' && this.y != 5 && this.ready)
   this.y++;
 };
 

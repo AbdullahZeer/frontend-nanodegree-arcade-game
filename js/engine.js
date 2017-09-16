@@ -88,8 +88,7 @@ var Engine = (function(global) {
 
     function checkCollisions() {
       allEnemies.forEach(function(enemy){
-        if(enemy.enemyCollisions())
-        player.die();
+      enemy.enemyCollisions()
       });
     }
     /* This is called by the update function and loops through all of the
@@ -104,6 +103,9 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update(gem);
+      allFire.forEach(function(fire) {
+        fire.update(dt,fire.d);
+      });
         gem.update();
     }
 
@@ -177,16 +179,24 @@ var Engine = (function(global) {
            }
          }else {
 
-
+           ctx.beginPath();
            ctx.font = "18px Arial";
            ctx.fillText("Score:" + player.score,4 * 101, 80);
 
+           if(player.numCross >= 5)
+           ctx.fillText("press space to use ability",2 * 82, 4 * 130);
+
+           ctx.closePath();
 
                allEnemies.forEach(function(enemy) {
                    enemy.render();
                });
 
                player.render();
+               allFire.forEach(function(fire) {
+                 fire.render();
+               });
+
                gem.render();
          }
 
@@ -214,7 +224,8 @@ var Engine = (function(global) {
         'images/Gem-Blue.png',
         'images/Gem-Orange.png',
         'images/knight.png',
-        'images/menu.png'
+        'images/menu.png',
+        'images/fire.png'
     ]);
     Resources.onReady(init);
 
