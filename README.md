@@ -1,5 +1,5 @@
 # BugKnight
-#### Play the game: [Here](abdullahzeer.github.io)
+#### Play the game: [Here](https://abdullahzeer.github.io)
 ---
 #### How to play:
 * Use arrow keys to move your character
