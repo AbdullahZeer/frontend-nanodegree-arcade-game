@@ -1,5 +1,5 @@
 # BugKnight
-#### Play the game: [Here](https://abdullahzeer.github.io)
+#### Play the game: [Here](https://udacity-saudi.github.io/Arcade-Master-4)
 ---
 #### How to play:
 * Use arrow keys to move your character
